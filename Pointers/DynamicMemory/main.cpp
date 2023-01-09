@@ -87,7 +87,7 @@ void main()
 	arr = push_row_back(arr, rows, cols);
 	FillRand(arr[rows - 1], cols, 900, 1000);
 	Print(arr, rows, cols);
-
+	
 	cout << delimiter << endl;
 	arr = push_row_front(arr, rows, cols);
 	FillRand(arr[0], cols, 100, 200);
@@ -267,55 +267,28 @@ template<typename T>T* pop_front(T* arr, int& n)
 
 template<typename T>T** push_row_back(T** arr, int& rows, const int cols)
 {
-	//1) Создаем буферный массив указателей:
-	T** buffer = new T*[rows + 1];
-	//2) Копируем адреса строк в новый массив указателей:
-	for (int i = 0; i < rows; i++)
-	{
-		buffer[i] = arr[i];
-	}
-	//3) Удаляем исходный массив указателей:
-	delete[] arr;
-	//4) Подменяем адрес в указателе 'arr' адресом нового массива:
-	arr = buffer;
-	//5) Создаем новую строку:
-	arr[rows] = new T[cols] {};
-	//6) После добавления строки, количество строк увеличивается на 1:
-	rows++;
-	//7) Mission complete - строка добавлена. Возвращаем новый массив:
-	return arr;
+	return push_back(arr, rows, new T[cols]{});
+	
 }
 template<typename T>T** push_row_front(T** arr, int& rows, const int cols)
 {
-	T** buffer = new T*[rows + 1];
-	for (int i = 0; i < rows; i++)buffer[i + 1] = arr[i];
-	delete[] arr;
-	arr = buffer;
-	arr[0] = new T[cols] {};
-	rows++;
-	return arr;
+	
+	return push_front(arr, rows, new T[cols]{});
+	
 }
 template<typename T>T** insert_row(T** arr, int& rows, const int cols, const int index)
 {
-	T** buffer = new T*[rows + 1];
-	for (int i = 0; i < index; i++)buffer[i] = arr[i];
-	for (int i = index; i < rows; i++)buffer[i + 1] = arr[i];
-	delete[] arr;
-	arr = buffer;
-	arr[index] = new T[cols] {};
-	rows++;
-	return arr;
+	
+	return insert(arr, rows, new T[cols]{}, index);
 }
 
 template<typename T>T** pop_row_back(T** arr, int& rows, const int cols)
 {
 	//1) Удаляем последнюю строку из памяти:
-	delete[] arr[rows - 1];
+	delete[]arr[rows - 1];
+
 	//2) Переопределяем массив указателей:
-	T** buffer = new T*[--rows];
-	for (int i = 0; i < rows; i++)buffer[i] = arr[i];
-	delete[] arr;
-	return buffer;
+	return pop_back(arr, rows);
 }
 
 template<typename T>void push_col_back(T** arr, const int rows, int& cols)
